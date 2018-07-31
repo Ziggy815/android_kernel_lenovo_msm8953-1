@@ -646,12 +646,8 @@ static int snd_rawmidi_info_select_user(struct snd_card *card,
 int snd_rawmidi_output_params(struct snd_rawmidi_substream *substream,
 			      struct snd_rawmidi_params * params)
 {
-<<<<<<< HEAD
 	char *newbuf;
 	char *oldbuf;
-=======
-	char *newbuf, *oldbuf;
->>>>>>> v3.18.117
 	struct snd_rawmidi_runtime *runtime = substream->runtime;
 	unsigned long flags;
 
@@ -665,7 +661,6 @@ int snd_rawmidi_output_params(struct snd_rawmidi_substream *substream,
 		return -EINVAL;
 	}
 	if (params->buffer_size != runtime->buffer_size) {
-<<<<<<< HEAD
 		mutex_lock(&runtime->realloc_mutex);
 		newbuf = __krealloc(runtime->buffer, params->buffer_size,
 				  GFP_KERNEL);
@@ -674,12 +669,6 @@ int snd_rawmidi_output_params(struct snd_rawmidi_substream *substream,
 			return -ENOMEM;
 		}
 		spin_lock_irqsave(&runtime->lock, flags);
-=======
-		newbuf = kmalloc(params->buffer_size, GFP_KERNEL);
-		if (!newbuf)
-			return -ENOMEM;
-		spin_lock_irq(&runtime->lock);
->>>>>>> v3.18.117
 		oldbuf = runtime->buffer;
 		runtime->buffer = newbuf;
 		runtime->buffer_size = params->buffer_size;
