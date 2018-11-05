@@ -155,6 +155,8 @@ static int f2fs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
 
 	if (IS_DIRSYNC(dir))
 		f2fs_sync_fs(sbi->sb, 1);
+
+	f2fs_balance_fs(sbi, true);
 	return 0;
 out:
 	handle_failed_inode(inode);
@@ -364,7 +366,7 @@ static int f2fs_symlink(struct inode *dir, struct dentry *dentry,
 	f2fs_unlock_op(sbi);
 	alloc_nid_done(sbi, inode->i_ino);
 
-	if (f2fs_encrypted_inode(dir)) {
+	if (f2fs_encrypted_inode(inode)) {
 		struct qstr istr = QSTR_INIT(symname, len);
 
 		err = f2fs_get_encryption_info(inode);
@@ -420,7 +422,8 @@ err_out:
 		f2fs_sync_fs(sbi->sb, 1);
 
 	kfree(sd);
-	f2fs_fname_crypto_free_buffer(&disk_link);
+
+	f2fs_balance_fs(sbi, true);
 	return err;
 out:
 	handle_failed_inode(inode);
@@ -558,6 +561,8 @@ static int __f2fs_tmpfile(struct inode *dir, struct dentry *dentry,
 		d_tmpfile(dentry, inode);
 	}
 	unlock_new_inode(inode);
+
+	f2fs_balance_fs(sbi, true);
 	return 0;
 
 release_out:
