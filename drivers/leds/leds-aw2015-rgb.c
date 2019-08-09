@@ -147,7 +147,7 @@ reg_vdd_set_vtg:
 
 static void aw2015_brightness_work_set(struct aw2015_led *led)
 {
-	u8 val, id;
+	u8 val = -1, id;
 	u8 leds_brightness[3] = {0, 0, 0}; /* red, green, blue */
 
 	/* enable regulators if they are disabled */
@@ -210,7 +210,7 @@ static void aw2015_brightness_work(struct work_struct *work)
 
 static void aw2015_led_blink_set(struct aw2015_led *led, unsigned long blinking)
 {
-	u8 val, id;
+	u8 val = -1, id;
 	u8 leds_brightness[3] = {0, 0, 0}; /* red, green, blue */
 
 	/* enable regulators if they are disabled */
@@ -342,33 +342,12 @@ static ssize_t aw2015_led_time_store(struct device *dev,
 	return len;
 }
 
-static ssize_t aw2015_led_reg_show(struct device *dev,
-				struct device_attribute *attr, char *buf)
-{
-	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-	struct aw2015_led *led = container_of(led_cdev,
-			struct aw2015_led, cdev);
-	unsigned char reg_val;
-	ssize_t len = 0;
-	u8 i;
-
-	for (i = 0; i < 0x3E; i++) {
-		aw2015_read(led, i, &reg_val);
-		len += snprintf(buf+len, PAGE_SIZE-len, "reg%2X = 0x%2X, ",
-			i, reg_val);
-	}
-
-	return len;
-}
-
 static DEVICE_ATTR(blink, 0664, NULL, aw2015_store_blink);
 static DEVICE_ATTR(led_time, 0664, aw2015_led_time_show, aw2015_led_time_store);
-static DEVICE_ATTR(reg, 0664, aw2015_led_reg_show, NULL);
 
 static struct attribute *aw2015_led_attributes[] = {
 	&dev_attr_blink.attr,
 	&dev_attr_led_time.attr,
-	&dev_attr_reg.attr,
 	NULL,
 };
 
@@ -378,7 +357,7 @@ static struct attribute_group aw2015_led_attr_group = {
 
 static int aw_2015_check_chipid(struct aw2015_led *led)
 {
-	u8 val;
+	u8 val = 0;
 
 	aw2015_write(led, AW_REG_RESET, AW_LED_RESET_MASK);
 	usleep_range(AW_LED_RESET_DELAY, AW_LED_RESET_DELAY);
