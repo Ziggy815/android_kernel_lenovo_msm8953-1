@@ -25,7 +25,11 @@ armadeus	ARMadeus Systems SARL
 atmel	Atmel Corporation
 auo	AU Optronics Corporation
 avago	Avago Technologies
+<<<<<<< HEAD
 awinic	AWINIC Technology Co.Ltd
+=======
+avia	avia semiconductor
+>>>>>>> 20b25af171d4bdc375c3ed09fed3dce513ed8d5d
 bosch	Bosch Sensortec GmbH
 brcm	Broadcom Corporation
 buffalo	Buffalo, Inc.
